@@ -102,4 +102,20 @@ class NetworkTest {
         assertEquals(5, Network.stepsBetween(grid, "R0C0", "R0C5"), "Not yet: 5 steps along the top row.");
         assertEquals(58, Network.stepsBetween(grid, "R0C0", "R29C29"), "Not yet: corner to corner of a 30 by 30 grid is 58 steps.");
     }
+
+    @Test
+    void stepsBetweenIsFastForATownOf90000() {
+        Map<String, List<String>> town = new LinkedHashMap<>();
+        for (int row = 0; row < 300; row++) {
+            for (int column = 0; column < 300; column++) {
+                if (column < 299) link(town, "R" + row + "C" + column, "R" + row + "C" + (column + 1));
+                if (row < 299) link(town, "R" + row + "C" + column, "R" + (row + 1) + "C" + column);
+            }
+        }
+        long started = System.nanoTime();
+        int steps = Network.stepsBetween(town, "R0C0", "R299C299");
+        double seconds = (System.nanoTime() - started) / 1e9;
+        assertEquals(598, steps, "Not yet: corner to corner of a 300 by 300 grid of 90,000 people is 598 steps.");
+        assertTrue(seconds < 2, "Not yet: a town of 90,000 people took " + String.format("%.1f", seconds) + " seconds. The right approach takes well under one.");
+    }
 }

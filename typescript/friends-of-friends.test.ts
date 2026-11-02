@@ -92,3 +92,18 @@ test("stepsBetween finds the fewest steps in a big grid", () => {
   assert.equal(stepsBetween(grid, "R0C0", "R0C5"), 5, "Not yet: 5 steps along the top row.");
   assert.equal(stepsBetween(grid, "R0C0", "R29C29"), 58, "Not yet: corner to corner of a 30 by 30 grid is 58 steps.");
 });
+
+test("stepsBetween is fast for a town of 90,000", () => {
+  const town: Map<string, string[]> = new Map();
+  for (let row = 0; row < 300; row++) {
+    for (let column = 0; column < 300; column++) {
+      if (column < 299) link(town, `R${row}C${column}`, `R${row}C${column + 1}`);
+      if (row < 299) link(town, `R${row}C${column}`, `R${row + 1}C${column}`);
+    }
+  }
+  const started = performance.now();
+  const steps = stepsBetween(town, "R0C0", "R299C299");
+  const seconds = (performance.now() - started) / 1000;
+  assert.equal(steps, 598, "Not yet: corner to corner of a 300 by 300 grid of 90,000 people is 598 steps.");
+  assert.ok(seconds < 2, `Not yet: a town of 90,000 people took ${seconds.toFixed(1)} seconds. The right approach takes well under one.`);
+});

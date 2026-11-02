@@ -1,6 +1,5 @@
 # Your three functions. The comment under each one says what it should
 # return, with examples. Replace each return line with your own code.
-from collections import deque
 
 
 def build_network(friendships):

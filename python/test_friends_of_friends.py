@@ -1,5 +1,7 @@
 # The tests for your three functions. You don't need to change this file.
 # Each message says what was expected, so a failing test tells you what to look at.
+import time
+
 from friends_of_friends import build_network, steps_between, suggest_friends
 
 FRIENDSHIPS = [("Ava", "Ben"), ("Ava", "Cara"), ("Ben", "Dev"), ("Cara", "Dev"), ("Dev", "Eli"), ("Eli", "Fay"), ("Gus", "Hana")]
@@ -87,3 +89,18 @@ def test_steps_between_finds_the_fewest_steps_in_a_big_grid():
                 link(grid, f"R{row}C{column}", f"R{row + 1}C{column}")
     assert steps_between(grid, "R0C0", "R0C5") == 5, "Not yet: 5 steps along the top row."
     assert steps_between(grid, "R0C0", "R29C29") == 58, "Not yet: corner to corner of a 30 by 30 grid is 58 steps."
+
+
+def test_steps_between_is_fast_for_a_town_of_90000():
+    town = {}
+    for row in range(300):
+        for column in range(300):
+            if column < 299:
+                link(town, f"R{row}C{column}", f"R{row}C{column + 1}")
+            if row < 299:
+                link(town, f"R{row}C{column}", f"R{row + 1}C{column}")
+    started = time.perf_counter()
+    steps = steps_between(town, "R0C0", "R299C299")
+    seconds = time.perf_counter() - started
+    assert steps == 598, "Not yet: corner to corner of a 300 by 300 grid of 90,000 people is 598 steps."
+    assert seconds < 2, f"Not yet: a town of 90,000 people took {seconds:.1f} seconds. The right approach takes well under one."

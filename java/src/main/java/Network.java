@@ -1,11 +1,5 @@
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+// java.util.* brings in every collection you might choose: List, Map, Set, Queue and more.
+import java.util.*;
 
 // Your three methods. The comment above each one says what it should
 // return, with examples. Replace each return line with your own code.

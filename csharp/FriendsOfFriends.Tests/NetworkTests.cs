@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FriendsOfFriends;
 
 namespace FriendsOfFriends.Tests;
@@ -116,5 +117,24 @@ public class NetworkTests
         }
         Assert.AreEqual(5, Network.StepsBetween(grid, "R0C0", "R0C5"), "Not yet: 5 steps along the top row.");
         Assert.AreEqual(58, Network.StepsBetween(grid, "R0C0", "R29C29"), "Not yet: corner to corner of a 30 by 30 grid is 58 steps.");
+    }
+
+    [TestMethod]
+    public void StepsBetweenIsFastForATownOf90000()
+    {
+        Dictionary<string, List<string>> town = new Dictionary<string, List<string>>();
+        for (int row = 0; row < 300; row++)
+        {
+            for (int column = 0; column < 300; column++)
+            {
+                if (column < 299) Link(town, "R" + row + "C" + column, "R" + row + "C" + (column + 1));
+                if (row < 299) Link(town, "R" + row + "C" + column, "R" + (row + 1) + "C" + column);
+            }
+        }
+        Stopwatch watch = Stopwatch.StartNew();
+        int steps = Network.StepsBetween(town, "R0C0", "R299C299");
+        watch.Stop();
+        Assert.AreEqual(598, steps, "Not yet: corner to corner of a 300 by 300 grid of 90,000 people is 598 steps.");
+        Assert.IsTrue(watch.Elapsed.TotalSeconds < 2, "Not yet: a town of 90,000 people took " + watch.Elapsed.TotalSeconds.ToString("0.0") + " seconds. The right approach takes well under one.");
     }
 }
